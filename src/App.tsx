@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
@@ -68,7 +68,6 @@ function App(): JSX.Element {
     setScaleType(newScaleType);
     if (exercise) {
       // Generate new scale positions based on the new scale type
-      const scale = generateScale(exercise.root_note, newScaleType);
       const newPositions = exercise.scale_positions.map(pos => {
         const index = SCALE_POSITIONS.indexOf(pos);
         return SCALE_POSITIONS[index];
