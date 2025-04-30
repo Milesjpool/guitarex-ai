@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
-import { NOTES, SCALE_POSITIONS, ScaleType, generateScale } from './utils/scales';
+import { NOTES, SCALE_POSITIONS, ScaleType } from './utils/scales';
 import './App.css';
 
 // Map scale positions to colors
