@@ -1,0 +1,30 @@
+.ai-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.ai-banner:hover {
+  transform: translateX(-50%) scale(1.05);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ai-banner-text {
+  font-size: 14px;
+  color: #666;
+  font-family: 'Arial', sans-serif;
+}
+
+.ai-banner-highlight {
+  color: #4a90e2;
+  font-weight: 600;
+} 

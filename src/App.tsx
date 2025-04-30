@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
+import AIBanner from './components/AIBanner';
 import './App.css';
 
 // Define musical notes and scale positions
@@ -66,6 +67,7 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
+      <AIBanner />
       <h1>Guitar Scale Practice</h1>
       <div className="exercise-box">
         <div className="key">
