@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import GuitarNeck from './components/GuitarNeck';
+import { Exercise, ErrorType } from './types';
 import './App.css';
 
 // Get the API URL based on the environment
@@ -7,11 +7,11 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:5000'  // Flask server URL in development
   : '';  // Use relative URL in production
 
-function App() {
-  const [exercise, setExercise] = useState(null);
-  const [error, setError] = useState(null);
+function App(): JSX.Element {
+  const [exercise, setExercise] = useState<Exercise | null>(null);
+  const [error, setError] = useState<ErrorType>(null);
 
-  const generateExercise = async () => {
+  const generateExercise = async (): Promise<void> => {
     try {
       setError(null);
       const response = await fetch(`${API_URL}/generate`, {
@@ -30,7 +30,7 @@ function App() {
       setExercise(data);
     } catch (error) {
       console.error('Error generating exercise:', error);
-      setError(error.message);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   };
 
@@ -49,12 +49,6 @@ function App() {
           {exercise && `Scale positions: ${exercise.scale_positions.join(', ')}`}
         </div>
         {error && <div className="error">{error}</div>}
-        {exercise && (
-          <GuitarNeck 
-            rootNote={exercise.root_note} 
-            scalePositions={exercise.scale_positions} 
-          />
-        )}
         <div className="instructions">
           <h3>Instructions:</h3>
           <ol>

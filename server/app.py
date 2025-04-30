@@ -26,10 +26,17 @@ ALL_SCALE_POSITIONS = ['Root', '2nd', '3rd', '4th', '5th', '6th', '7th']
 def generate_exercise():
     root_note = random.choice(NOTES)
     
-    # Generate ascending scale positions
+    # Generate scale positions, starting with Root and moving up with random intervals
     num_positions = random.randint(3, 4)
-    start_pos = random.randint(0, len(ALL_SCALE_POSITIONS) - num_positions)
-    scale_positions = ALL_SCALE_POSITIONS[start_pos:start_pos + num_positions]
+    current_pos = 0  # Start at Root
+    scale_positions = [ALL_SCALE_POSITIONS[current_pos]]
+    
+    # Add random ascending intervals
+    for _ in range(num_positions - 1):
+        # Choose a random interval to move up (at least 1 step)
+        interval = random.randint(1, 3)
+        current_pos = min(current_pos + interval, len(ALL_SCALE_POSITIONS) - 1)
+        scale_positions.append(ALL_SCALE_POSITIONS[current_pos])
     
     return {
         'root_note': root_note,

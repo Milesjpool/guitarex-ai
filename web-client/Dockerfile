@@ -6,6 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Copy TypeScript config files
+COPY tsconfig*.json ./
+
 # Copy the rest of the files
 COPY . .
 
