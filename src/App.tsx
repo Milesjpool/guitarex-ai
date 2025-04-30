@@ -3,10 +3,9 @@ import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import './App.css';
 
-// Get the API URL based on the environment
-const API_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:5000'  // Flask server URL in development
-  : '';  // Use relative URL in production
+// Define musical notes and scale positions
+const NOTES = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+const ALL_SCALE_POSITIONS = ['Root', '2nd', '3rd', '4th', '5th', '6th', '7th'];
 
 // Map scale positions to colors
 const getPositionColor = (position: string, index: number): string => {
@@ -24,27 +23,37 @@ const getPositionColor = (position: string, index: number): string => {
   return colors[index - 1] || '#ffffff';
 };
 
+const generateExercise = (): Exercise => {
+  const root_note = NOTES[Math.floor(Math.random() * NOTES.length)];
+  
+  // Generate scale positions, starting with Root and moving up with random intervals
+  const num_positions = Math.floor(Math.random() * 2) + 3; // Random number between 3 and 4
+  let current_pos = 0;  // Start at Root
+  const scale_positions = [ALL_SCALE_POSITIONS[current_pos]];
+  
+  // Add random ascending intervals
+  for (let i = 0; i < num_positions - 1; i++) {
+    // Choose a random interval to move up (at least 1 step)
+    const interval = Math.floor(Math.random() * 3) + 1;
+    current_pos = Math.min(current_pos + interval, ALL_SCALE_POSITIONS.length - 1);
+    scale_positions.push(ALL_SCALE_POSITIONS[current_pos]);
+  }
+  
+  return {
+    root_note,
+    scale_positions
+  };
+};
+
 function App(): JSX.Element {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [error, setError] = useState<ErrorType>(null);
 
-  const generateExercise = async (): Promise<void> => {
+  const handleGenerateExercise = (): void => {
     try {
       setError(null);
-      const response = await fetch(`${API_URL}/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setExercise(data);
+      const newExercise = generateExercise();
+      setExercise(newExercise);
     } catch (error) {
       console.error('Error generating exercise:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
@@ -52,7 +61,7 @@ function App(): JSX.Element {
   };
 
   useEffect(() => {
-    generateExercise();
+    handleGenerateExercise();
   }, []);
 
   return (
@@ -93,7 +102,7 @@ function App(): JSX.Element {
           </ol>
         </div>
       </div>
-      <button onClick={generateExercise}>Generate New Exercise</button>
+      <button onClick={handleGenerateExercise}>Generate New Exercise</button>
     </div>
   );
 }
