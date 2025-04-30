@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
+import { NOTES, SCALE_POSITIONS, ScaleType, generateScale } from './utils/scales';
 import './App.css';
-
-// Define musical notes and scale positions
-const NOTES = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-const ALL_SCALE_POSITIONS = ['Root', '2nd', '3rd', '4th', '5th', '6th', '7th'];
 
 // Map scale positions to colors
 const getPositionColor = (position: string, index: number): string => {
@@ -24,36 +21,38 @@ const getPositionColor = (position: string, index: number): string => {
   return colors[index - 1] || '#ffffff';
 };
 
-const generateExercise = (): Exercise => {
+const generateExercise = (scaleType: ScaleType): Exercise => {
   const root_note = NOTES[Math.floor(Math.random() * NOTES.length)];
   
   // Generate scale positions, starting with Root and moving up with random intervals
   const num_positions = Math.floor(Math.random() * 2) + 3; // Random number between 3 and 4
   let current_pos = 0;  // Start at Root
-  const scale_positions = [ALL_SCALE_POSITIONS[current_pos]];
+  const scale_positions = [SCALE_POSITIONS[current_pos]];
   
   // Add random ascending intervals
   for (let i = 0; i < num_positions - 1; i++) {
     // Choose a random interval to move up (at least 1 step)
     const interval = Math.floor(Math.random() * 3) + 1;
-    current_pos = Math.min(current_pos + interval, ALL_SCALE_POSITIONS.length - 1);
-    scale_positions.push(ALL_SCALE_POSITIONS[current_pos]);
+    current_pos = Math.min(current_pos + interval, SCALE_POSITIONS.length - 1);
+    scale_positions.push(SCALE_POSITIONS[current_pos]);
   }
   
   return {
     root_note,
-    scale_positions
+    scale_positions,
+    scale_type: scaleType
   };
 };
 
 function App(): JSX.Element {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [error, setError] = useState<ErrorType>(null);
+  const [scaleType, setScaleType] = useState<ScaleType>('major');
 
   const handleGenerateExercise = (): void => {
     try {
       setError(null);
-      const newExercise = generateExercise();
+      const newExercise = generateExercise(scaleType);
       setExercise(newExercise);
     } catch (error) {
       console.error('Error generating exercise:', error);
@@ -65,13 +64,31 @@ function App(): JSX.Element {
     handleGenerateExercise();
   }, []);
 
+  const handleScaleTypeChange = (newScaleType: ScaleType): void => {
+    setScaleType(newScaleType);
+    if (exercise) {
+      // Generate new scale positions based on the new scale type
+      const scale = generateScale(exercise.root_note, newScaleType);
+      const newPositions = exercise.scale_positions.map(pos => {
+        const index = SCALE_POSITIONS.indexOf(pos);
+        return SCALE_POSITIONS[index];
+      });
+      
+      setExercise({
+        ...exercise,
+        scale_type: newScaleType,
+        scale_positions: newPositions
+      });
+    }
+  };
+
   return (
     <div className="container">
       <AIBanner />
       <h1>Guitar Scale Practice</h1>
       <div className="exercise-box">
         <div className="key">
-          {exercise ? `Key: ${exercise.root_note}` : 'Press Generate to start'}
+          {exercise ? `${exercise.root_note} ${exercise.scale_type}` : 'Press Generate to start'}
         </div>
         <div className="positions">
           {exercise && (
@@ -89,12 +106,29 @@ function App(): JSX.Element {
           )}
         </div>
         {error && <div className="error">{error}</div>}
-        {exercise && (
-          <GuitarNeck
-            rootNote={exercise.root_note}
-            scalePositions={exercise.scale_positions}
-          />
-        )}
+        <div className="fretboard-container">
+          {exercise && (
+            <GuitarNeck
+              rootNote={exercise.root_note}
+              scalePositions={exercise.scale_positions}
+              scaleType={exercise.scale_type}
+            />
+          )}
+          <div className="scale-type-selector">
+            <button 
+              className={`scale-type-btn ${scaleType === 'major' ? 'active' : ''}`}
+              onClick={() => handleScaleTypeChange('major')}
+            >
+              Major
+            </button>
+            <button 
+              className={`scale-type-btn ${scaleType === 'minor' ? 'active' : ''}`}
+              onClick={() => handleScaleTypeChange('minor')}
+            >
+              Minor
+            </button>
+          </div>
+        </div>
         <div className="instructions">
           <h3>Instructions:</h3>
           <ol>

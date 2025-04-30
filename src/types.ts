@@ -1,13 +1,17 @@
+import { Note, ScalePosition, ScaleType } from './utils/scales';
+
 export interface Exercise {
-  root_note: string;
-  scale_positions: string[];
+  root_note: Note;
+  scale_positions: ScalePosition[];
+  scale_type: ScaleType;
 }
 
 export type ErrorType = string | null;
 
 export interface GuitarNeckProps {
-  rootNote: string;
-  scalePositions: string[];
+  rootNote: Note;
+  scalePositions: ScalePosition[];
+  scaleType: ScaleType;
 }
 
 export type StringName = 'E' | 'A' | 'D' | 'G' | 'B' | 'E';
