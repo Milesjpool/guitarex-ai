@@ -85,8 +85,10 @@ function App(): JSX.Element {
     <div className="container">
       <h1>GuitarEx<sup>AI</sup> <span>🎸</span></h1>
       <div className="exercise-box">
-        <div className="key">
-          {exercise ? `${exercise.root_note} ${exercise.scale_type}` : 'Press Generate to start'}
+        <div className="key-container">
+          <div className="key" onClick={handleGenerateExercise}>
+            {exercise ? `${exercise.root_note} ${exercise.scale_type}` : 'Press Generate to start'}
+          </div>
         </div>
         <div className="positions">
           {exercise && (
@@ -136,7 +138,6 @@ function App(): JSX.Element {
           </ol>
         </div>
       </div>
-      <button onClick={handleGenerateExercise}>Generate New Exercise</button>
       <AIBanner />
     </div>
   );
