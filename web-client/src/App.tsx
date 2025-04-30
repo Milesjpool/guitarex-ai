@@ -8,6 +8,22 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:5000'  // Flask server URL in development
   : '';  // Use relative URL in production
 
+// Map scale positions to colors
+const getPositionColor = (position: string, index: number): string => {
+  if (position === 'Root') return '#ff4444';
+  const colors = [
+    '#33b5e5', // 2nd
+    '#00C851', // 3rd
+    '#ffbb33', // 4th
+    '#aa66cc', // 5th
+    '#ff8800', // 6th
+    '#0099cc', // 7th
+    '#2BBBAD', // 8th
+    '#CC0000'  // 9th
+  ];
+  return colors[index - 1] || '#ffffff';
+};
+
 function App(): JSX.Element {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [error, setError] = useState<ErrorType>(null);
@@ -47,11 +63,23 @@ function App(): JSX.Element {
           {exercise ? `Key: ${exercise.root_note}` : 'Press Generate to start'}
         </div>
         <div className="positions">
-          {exercise && `Scale positions: ${exercise.scale_positions.join(', ')}`}
+          {exercise && (
+            <>
+              Scale positions:{' '}
+              {exercise.scale_positions.map((pos, index) => (
+                <span 
+                  key={pos} 
+                  style={{ color: getPositionColor(pos, index) }}
+                >
+                  {pos}{index < exercise.scale_positions.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </>
+          )}
         </div>
         {error && <div className="error">{error}</div>}
         {exercise && (
-          <GuitarNeck 
+          <GuitarNeck
             rootNote={exercise.root_note}
             scalePositions={exercise.scale_positions}
           />
