@@ -3,13 +3,14 @@
   flex-direction: column;
   background-color: #2c3e50;
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 0 20px 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   height: fit-content;
   min-height: 200px;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .fret-board {
@@ -20,6 +21,7 @@
   bottom: 20px;
   display: flex;
   overflow: visible;
+  width: calc(100% - 40px);
 }
 
 .strings {
@@ -32,6 +34,7 @@
   gap: 12px;
   padding: 10px 0;
   overflow: visible;
+  margin-right: 0;
 }
 
 .string-container {
@@ -40,7 +43,7 @@
   gap: 10px;
   height: fit-content;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .string-name {
@@ -55,16 +58,26 @@
   display: flex;
   position: relative;
   height: 2px;
-  background-color: #ecf0f1;
+  background-color: #ecf0f188;
   flex-grow: 1;
-  opacity: 0.5;
+  width: calc(100% + 8.33%); /* Add one extra fret width (100% / 12 frets) */
   margin-right: -20px;
+  overflow: visible;
 }
 
 .fret {
   position: relative;
   flex: 1;
   height: 100%;
+  min-width: 0;
+}
+
+.fret.first-fret {
+  width: 8px;
+  flex: none;
+  min-width: 8px;
+  max-width: 8px;
+  overflow: visible;
 }
 
 .fret-wire {
@@ -118,4 +131,76 @@
 
 .fret-marker:nth-child(12) .dot {
   margin: 0;
+}
+
+.fret-space {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.root-note {
+  width: 12px;
+  height: 12px;
+  background-color: #ff4444;
+  border-radius: 50%;
+  transform: translateX(-5%);
+  opacity: 0.9;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+}
+
+.fret.first-fret .root-note {
+  opacity: 0.7;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-55%) translateX(10%);
+  box-shadow: none;
+  border: none;
+}
+
+.fret.first-fret .root-note::before,
+.fret.first-fret .root-note::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: #ff4444;
+  top: 50%;
+  left: 0;
+  box-shadow: none;
+}
+
+.fret.first-fret .root-note::before {
+  transform: rotate(45deg);
+}
+
+.fret.first-fret .root-note::after {
+  transform: rotate(-45deg);
+}
+
+.last-fret {
+  position: relative;
+  overflow: visible;
+}
+
+.last-fret::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 20px;
+  background-color: #ecf0f1;
 } 
