@@ -7,21 +7,25 @@ body {
     color: #333;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 20px 0 40px;
+    box-sizing: border-box;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%;
+    width: 95%;
     max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px 60px;
+    margin: 0 auto;
+    padding: 10px 20px;
     position: relative;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: auto;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -80,9 +84,9 @@ h1:hover span {
 
 .exercise-box {
     background-color: #f8f9fa;
-    padding: 30px;
-    border-radius: 8px;
-    margin: 20px 0;
+    padding: 20px;
+    border-radius: 0;
+    margin: 15px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -98,12 +102,12 @@ h1:hover span {
 }
 
 .key {
-    font-size: 2em;
+    font-size: 1.5em;
     color: #e74c3c;
     text-align: center;
     margin: 20px 0;
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 8px 16px;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -117,19 +121,29 @@ h1:hover span {
 }
 
 .positions {
-    font-size: 1.2em;
+    font-size: 1em;
     color: #2980b9;
     text-align: center;
     margin: 15px 0;
 }
 
 .instructions {
-    margin: 20px 0 10px;
-    padding: 20px 15px;
+    margin: 15px 0 10px;
+    padding: 15px;
     background-color: #edf2f7;
     border-radius: 8px;
     width: 100%;
     max-width: 500px;
+}
+
+.instructions h3 {
+    font-size: 1.1em;
+    margin: 0 0 10px 0;
+}
+
+.instructions li {
+    margin: 8px 0;
+    font-size: 0.9em;
 }
 
 button {
@@ -148,10 +162,6 @@ button {
 
 button:hover {
     background-color: #1a6a9c;
-}
-
-.instructions li {
-    margin: 10px 0;
 }
 
 .error {
@@ -179,7 +189,7 @@ button:hover {
 }
 
 .scale-type-btn {
-    padding: 8px 16px;
+    padding: 6px 12px;
     background: white;
     color: #666;
     border: none;
@@ -187,8 +197,9 @@ button:hover {
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s ease;
-    min-width: 80px;
+    min-width: 60px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
 }
 
 .scale-type-btn:hover {
@@ -199,4 +210,53 @@ button:hover {
     background: #2980b9;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width: 768px) {
+    body {
+        padding: 20px 0 30px;
+    }
+
+    .key {
+        font-size: 2em;
+        padding: 10px 20px;
+    }
+
+    .positions {
+        font-size: 1.2em;
+    }
+
+    .scale-type-btn {
+        padding: 8px 16px;
+        min-width: 80px;
+        font-size: 1em;
+    }
+
+    .container {
+        width: 90%;
+        margin: 20px auto;
+        padding: 20px 60px;
+        min-height: auto;
+    }
+
+    .exercise-box {
+        padding: 30px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .instructions {
+        margin: 20px 0 10px;
+        padding: 20px 15px;
+    }
+
+    .instructions h3 {
+        font-size: 1.2em;
+        margin: 0 0 12px 0;
+    }
+
+    .instructions li {
+        margin: 10px 0;
+        font-size: 1em;
+    }
 } 
