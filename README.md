@@ -1,4 +1,6 @@
-# GuitarEx
+# GuitarEx<sup>AI</sup> 🎸
+
+[![Deploy to GitHub Pages](https://github.com/Milesjpool/guitarex-ai/actions/workflows/deploy.yml/badge.svg)](https://github.com/Milesjpool/guitarex-ai/actions/workflows/deploy.yml)
 
 A web application for guitar practice and learning, featuring an interactive guitar neck visualization and exercise tools.
 
