@@ -83,8 +83,7 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
-      <AIBanner />
-      <h1>Guitar Scale Practice</h1>
+      <h1>GuitarEx<sup>AI</sup> <span>🎸</span></h1>
       <div className="exercise-box">
         <div className="key">
           {exercise ? `${exercise.root_note} ${exercise.scale_type}` : 'Press Generate to start'}
@@ -138,6 +137,7 @@ function App(): JSX.Element {
         </div>
       </div>
       <button onClick={handleGenerateExercise}>Generate New Exercise</button>
+      <AIBanner />
     </div>
   );
 }
