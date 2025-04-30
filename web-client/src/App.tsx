@@ -68,7 +68,7 @@ function App(): JSX.Element {
               Scale positions:{' '}
               {exercise.scale_positions.map((pos, index) => (
                 <span 
-                  key={pos} 
+                  key={`${pos}-${index}`} 
                   style={{ color: getPositionColor(pos, index) }}
                 >
                   {pos}{index < exercise.scale_positions.length - 1 ? ', ' : ''}
