@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Exercise, ErrorType } from './types';
+import GuitarNeck from './components/GuitarNeck';
 import './App.css';
 
 // Get the API URL based on the environment
@@ -49,6 +50,12 @@ function App(): JSX.Element {
           {exercise && `Scale positions: ${exercise.scale_positions.join(', ')}`}
         </div>
         {error && <div className="error">{error}</div>}
+        {exercise && (
+          <GuitarNeck 
+            rootNote={exercise.root_note}
+            scalePositions={exercise.scale_positions}
+          />
+        )}
         <div className="instructions">
           <h3>Instructions:</h3>
           <ol>
