@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   min-height: 100px;
-  padding: 8px;
+  padding: 8px 0px 8px 12px ;
   gap: 6px;
   width: 100%;
   max-width: 320px;
@@ -19,7 +19,7 @@
 .fret-board {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 24px;
   right: 20px;
   bottom: 20px;
   display: flex;
@@ -63,8 +63,7 @@
   height: 2px;
   background-color: #ecf0f188;
   flex-grow: 1;
-  width: calc(100% + 8.33%); /* Add one extra fret width (100% / 12 frets) */
-  margin-right: -20px;
+  margin-right: -6px;
   overflow: visible;
 }
 
@@ -72,20 +71,17 @@
   position: relative;
   flex: 1;
   height: 100%;
-  min-width: 0;
 }
 
 .fret.first-fret {
-  width: 8px;
+  width: 11px;
   flex: none;
-  min-width: 8px;
-  max-width: 8px;
   overflow: visible;
 }
 
 .fret-wire {
   position: absolute;
-  right: 0;
+  right: -1px;
   top: -20px;
   bottom: -20px;
   width: 3px;
@@ -94,11 +90,11 @@
 
 .nut {
   position: absolute;
-  right: 0;
+  right: -3px;
   top: -20px;
   bottom: -20px;
   width: 6px;
-  background-color: #ecf0f1;
+  background-color: #f1f0d7;
 }
 
 .fret-marker {
@@ -116,7 +112,7 @@
 .dot {
   width: 8px;
   height: 8px;
-  background-color: #ecf0f1;
+  background-color: #fdff984b;
   border-radius: 50%;
 }
 
@@ -330,18 +326,6 @@
 @media (min-width: 768px) {
   .guitar-neck {
     min-height: 120px;
-    padding: 12px;
-    gap: 8px;
     max-width: 500px;
-  }
-
-  .strings {
-    gap: 8px;
-    padding: 6px 0;
-  }
-
-  .string-name {
-    width: 16px;
-    font-size: 1rem;
   }
 } 
