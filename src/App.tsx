@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
 import { NOTES, SCALE_POSITIONS, ScaleType } from './utils/scales';
+import { playNote, playScale } from './utils/audio';
 import './App.css';
 
 // Map scale positions to colors
@@ -49,20 +50,33 @@ function App(): JSX.Element {
   const [error, setError] = useState<ErrorType>(null);
   const [scaleType, setScaleType] = useState<ScaleType>('major');
 
-  const handleGenerateExercise = (): void => {
+  const handleGenerateExercise = useCallback((): void => {
     try {
       setError(null);
       const newExercise = generateExercise(scaleType);
       setExercise(newExercise);
+      
+      // Play the root note when exercise is generated
+      if (newExercise) {
+        playNote(newExercise.root_note);
+      }
     } catch (error) {
       console.error('Error generating exercise:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
-  };
+  }, [scaleType]);
+  
+  const handlePlayScale = useCallback(() => {
+    if (!exercise) return;
+    playScale(exercise.root_note, exercise.scale_type, 120);
+  }, [exercise]);
 
   useEffect(() => {
-    handleGenerateExercise();
-  }, []);
+    // Only generate if we don't have an exercise yet
+    if (!exercise) {
+      handleGenerateExercise();
+    }
+  }, [exercise, handleGenerateExercise]);
 
   const handleScaleTypeChange = (newScaleType: ScaleType): void => {
     setScaleType(newScaleType);
@@ -86,8 +100,24 @@ function App(): JSX.Element {
       <h1>GuitarEx<sup>AI</sup> <span>🎸</span></h1>
       <div className="exercise-box">
         <div className="key-container">
-          <div className="key" onClick={handleGenerateExercise}>
-            {exercise ? `${exercise.root_note} ${exercise.scale_type}` : 'Press Generate to start'}
+          <div className="key-container">
+            <div className="key" onClick={handleGenerateExercise}>
+              {exercise ? (
+                <span>{exercise.root_note} {exercise.scale_type}</span>
+              ) : 'Press Generate to start'}
+            </div>
+            {exercise && (
+              <button 
+                className="play-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlayScale();
+                }}
+                title="Play scale"
+              >
+                ♫
+              </button>
+            )}
           </div>
         </div>
         <div className="positions">
