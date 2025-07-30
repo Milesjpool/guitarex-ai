@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
-import { NOTES, SCALE_POSITIONS, ScaleType, getScaleIntervals, getNoteAtInterval } from './utils/scales';
+import { NOTES, SCALE_POSITIONS, ScaleType } from './utils/scales';
 import { playNote, playSelectedScalePositions, playScaleDegree } from './utils/audio';
 import './App.css';
 

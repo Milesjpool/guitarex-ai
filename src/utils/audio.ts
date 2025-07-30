@@ -227,7 +227,6 @@ export function playSelectedScalePositions(rootNote: string, scaleType: string, 
   audioContext.resume().catch(console.warn);
 
   // Audio parameters (same as playNote for consistency)
-  const attackTime = 0.02;
   const releaseTime = 0.1;
 
   // Define scale intervals for major and minor scales
