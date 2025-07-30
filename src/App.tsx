@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Exercise, ErrorType } from './types';
 import GuitarNeck from './components/GuitarNeck';
 import AIBanner from './components/AIBanner';
-import { NOTES, SCALE_POSITIONS, ScaleType } from './utils/scales';
-import { playNote, playScale } from './utils/audio';
+import { NOTES, SCALE_POSITIONS, ScaleType, getScaleIntervals, getNoteAtInterval } from './utils/scales';
+import { playNote, playSelectedScalePositions, playScaleDegree } from './utils/audio';
 import './App.css';
 
 // Map scale positions to colors
@@ -24,12 +24,12 @@ const getPositionColor = (position: string, index: number): string => {
 
 const generateExercise = (scaleType: ScaleType): Exercise => {
   const root_note = NOTES[Math.floor(Math.random() * NOTES.length)];
-  
+
   // Generate scale positions, starting with Root and moving up with random intervals
   const num_positions = Math.floor(Math.random() * 2) + 3; // Random number between 3 and 4
   let current_pos = 0;  // Start at Root
   const scale_positions = [SCALE_POSITIONS[current_pos]];
-  
+
   // Add random ascending intervals
   for (let i = 0; i < num_positions - 1; i++) {
     // Choose a random interval to move up (at least 1 step)
@@ -37,7 +37,7 @@ const generateExercise = (scaleType: ScaleType): Exercise => {
     current_pos = Math.min(current_pos + interval, SCALE_POSITIONS.length - 1);
     scale_positions.push(SCALE_POSITIONS[current_pos]);
   }
-  
+
   return {
     root_note,
     scale_positions,
@@ -55,7 +55,7 @@ function App(): JSX.Element {
       setError(null);
       const newExercise = generateExercise(scaleType);
       setExercise(newExercise);
-      
+
       // Play the root note when exercise is generated
       if (newExercise) {
         playNote(newExercise.root_note);
@@ -65,11 +65,8 @@ function App(): JSX.Element {
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   }, [scaleType]);
-  
-  const handlePlayScale = useCallback(() => {
-    if (!exercise) return;
-    playScale(exercise.root_note, exercise.scale_type, 120);
-  }, [exercise]);
+
+
 
   useEffect(() => {
     // Only generate if we don't have an exercise yet
@@ -86,13 +83,26 @@ function App(): JSX.Element {
         const index = SCALE_POSITIONS.indexOf(pos);
         return SCALE_POSITIONS[index];
       });
-      
-      setExercise({
+
+      const updatedExercise = {
         ...exercise,
         scale_type: newScaleType,
         scale_positions: newPositions
-      });
+      };
+
+      setExercise(updatedExercise);
+
+      // Play the selected scale positions when scale type changes
+      // The audio utility will handle preventing conflicts
+      playSelectedScalePositions(updatedExercise.root_note, newScaleType, newPositions, 120);
     }
+  };
+
+  const handleScaleDegreeClick = (scalePosition: string): void => {
+    if (!exercise) return;
+
+    // Use the new playScaleDegree function from the audio utility
+    playScaleDegree(exercise.root_note, exercise.scale_type, scalePosition, 0.5);
   };
 
   return (
@@ -100,24 +110,10 @@ function App(): JSX.Element {
       <h1>GuitarEx<sup>AI</sup> <span>🎸</span></h1>
       <div className="exercise-box">
         <div className="key-container">
-          <div className="key-container">
-            <div className="key" onClick={handleGenerateExercise}>
-              {exercise ? (
-                <span>{exercise.root_note} {exercise.scale_type}</span>
-              ) : 'Press Generate to start'}
-            </div>
-            {exercise && (
-              <button 
-                className="play-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlayScale();
-                }}
-                title="Play scale"
-              >
-                ♫
-              </button>
-            )}
+          <div className="key" onClick={handleGenerateExercise}>
+            {exercise ? (
+              <span>{exercise.root_note} {exercise.scale_type}</span>
+            ) : 'Press Generate to start'}
           </div>
         </div>
         <div className="positions">
@@ -125,12 +121,17 @@ function App(): JSX.Element {
             <>
               Scale positions:{' '}
               {exercise.scale_positions.map((pos, index) => (
-                <span 
-                  key={`${pos}-${index}`} 
-                  style={{ color: getPositionColor(pos, index) }}
-                >
-                  {pos}{index < exercise.scale_positions.length - 1 ? ', ' : ''}
-                </span>
+                <React.Fragment key={`${pos}-${index}`}>
+                  <span
+                    style={{ color: getPositionColor(pos, index) }}
+                    className="scale-degree-clickable"
+                    onClick={() => handleScaleDegreeClick(pos)}
+                    title={`Click to play ${pos} degree`}
+                  >
+                    {pos}
+                  </span>
+                  {index < exercise.scale_positions.length - 1 && ', '}
+                </React.Fragment>
               ))}
             </>
           )}
@@ -145,13 +146,13 @@ function App(): JSX.Element {
             />
           )}
           <div className="scale-type-selector">
-            <button 
+            <button
               className={`scale-type-btn ${scaleType === 'major' ? 'active' : ''}`}
               onClick={() => handleScaleTypeChange('major')}
             >
               Major
             </button>
-            <button 
+            <button
               className={`scale-type-btn ${scaleType === 'minor' ? 'active' : ''}`}
               onClick={() => handleScaleTypeChange('minor')}
             >
